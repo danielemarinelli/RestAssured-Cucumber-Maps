@@ -18,6 +18,7 @@ import resources.Utils;
 
 import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,19 +34,16 @@ public class stepDefinition extends Utils {
 
 
     @Given("Add Place Payload")
-    public void add_place_payload() {
+    public void add_place_payload() throws FileNotFoundException {
 
-        responseSpec = new ResponseSpecBuilder().expectStatusCode(200)
-                .expectContentType(ContentType.JSON).build();
-
-
-        // create RequestSpecification object and append it to when method
         res = given().log().all().spec(requestSpecificationNeeded())
                 .body(dataToSend.addPlacePayload());
     }
 
     @When("user calls {string} with POST http request")
     public void user_calls_with_post_http_request(String string) {
+        responseSpec = new ResponseSpecBuilder().expectStatusCode(200)
+                .expectContentType(ContentType.JSON).build();
         postResponse = res.when()
                 .post("/maps/api/place/add/json")
                 .then()
