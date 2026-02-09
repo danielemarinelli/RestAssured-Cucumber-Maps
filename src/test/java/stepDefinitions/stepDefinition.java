@@ -1,12 +1,8 @@
 package stepDefinitions;
 
-import POJO.AddPlace;
-import POJO.Location;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.RestAssured;
-import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
@@ -15,12 +11,9 @@ import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import resources.DataSetBuild;
 import resources.Utils;
-
 import static org.junit.Assert.*;
+import java.io.IOException;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
@@ -34,7 +27,7 @@ public class stepDefinition extends Utils {
 
 
     @Given("Add Place Payload")
-    public void add_place_payload() throws FileNotFoundException {
+    public void add_place_payload() throws IOException {
 
         res = given().log().all().spec(requestSpecificationNeeded())
                 .body(dataToSend.addPlacePayload());
