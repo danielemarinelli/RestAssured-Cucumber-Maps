@@ -59,11 +59,12 @@ public class stepDefinition extends Utils {
             }
             */
 
-    // verify that Status=OK and scope=APP
+    // verify that Status=OK and scope=APP, so this then runs twice with different set of data
     @Then("{string} in response body in {string}")
     public void in_response_body_in(String keyValue, String expectedValue) {
         String pr = postResponse.asString();
         JsonPath jpath = new JsonPath(pr);
+        System.out.println(System.getProperties());
         assertEquals(jpath.get(keyValue).toString(),expectedValue);
     }
 
