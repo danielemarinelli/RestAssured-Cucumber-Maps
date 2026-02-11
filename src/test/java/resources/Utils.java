@@ -13,18 +13,21 @@ import java.util.Properties;
 public class Utils {
     //contains all reusable methods
 
-    RequestSpecification reqSpec;
+    public static RequestSpecification reqSpec;
 
     public RequestSpecification requestSpecificationNeeded() throws IOException {
 
-        // all logs directed to an external file that will be created
-        PrintStream logToFile = new PrintStream(new FileOutputStream("allLogs.txt"));
-        // get the base URL from the Properties file
-        reqSpec = new RequestSpecBuilder().setBaseUri(getValueOfProperties("appURL")).addQueryParam("key","qaclick123")
-                .addFilter(RequestLoggingFilter.logRequestTo(logToFile))
-                .addFilter(ResponseLoggingFilter.logResponseTo(logToFile))
-                .setContentType(ContentType.JSON).setRelaxedHTTPSValidation().build();
-        //RestAssured.useRelaxedHTTPSValidation();  // ---> to bypass SSL verification we can set it on the RequestSpecBuilder
+        if(reqSpec==null) {
+            // all logs directed to an external file that will be created
+            PrintStream logToFile = new PrintStream(new FileOutputStream("allLogs.txt"));
+            // get the base URL from the Properties file
+            reqSpec = new RequestSpecBuilder().setBaseUri(getValueOfProperties("appURL")).addQueryParam("key", "qaclick123")
+                    .addFilter(RequestLoggingFilter.logRequestTo(logToFile))
+                    .addFilter(ResponseLoggingFilter.logResponseTo(logToFile))
+                    .setContentType(ContentType.JSON).setRelaxedHTTPSValidation().build();
+            //RestAssured.useRelaxedHTTPSValidation();  // ---> to bypass SSL verification we can set it on the RequestSpecBuilder
+            return reqSpec;
+        }
         return reqSpec;
     }
 

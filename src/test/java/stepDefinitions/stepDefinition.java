@@ -25,13 +25,31 @@ public class stepDefinition extends Utils {
     Response postResponse;
     DataSetBuild dataToSend = new DataSetBuild();
 
-
-    @Given("Add Place Payload")
+    @Given("add place payload")
     public void add_place_payload() throws IOException {
-
         res = given().log().all().spec(requestSpecificationNeeded())
                 .body(dataToSend.addPlacePayload());
     }
+
+     /*
+
+    @Given("add place payload with {string} {string} {string} {string}")
+    public void add_place_payload_with(String userName, String userLanguage, String userAddress, String url) throws IOException {
+
+        res = given().log().all().spec(requestSpecificationNeeded())
+                .body(dataToSend.addPlacePayload(userName, userLanguage, userAddress ,url));
+
+    }
+
+
+
+
+    @Given("Add Place Payload {string} {string} {string} {string}")
+    public void add_place_payload(String userName, String userLanguage, String userAddress, String url) throws IOException {
+        res = given().log().all().spec(requestSpecificationNeeded())
+                .body(dataToSend.addPlacePayload(userName, userLanguage, userAddress ,url));
+
+    }*/
 
     @When("user calls {string} with POST http request")
     public void user_calls_with_post_http_request(String string) {
@@ -68,4 +86,9 @@ public class stepDefinition extends Utils {
         assertEquals(jpath.get(keyValue).toString(),expectedValue);
     }
 
+
+    @Given("I am testing")
+    public void i_am_testing() {
+        System.out.println("Test step works");
+    }
 }
