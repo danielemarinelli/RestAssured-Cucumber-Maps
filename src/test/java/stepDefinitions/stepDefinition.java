@@ -9,6 +9,7 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
+import resources.APIroutes;
 import resources.DataSetBuild;
 import resources.Utils;
 import static org.junit.Assert.*;
@@ -52,11 +53,12 @@ public class stepDefinition extends Utils {
     }*/
 
     @When("user calls {string} with POST http request")
-    public void user_calls_with_post_http_request(String string) {
+    public void user_calls_with_post_http_request(String route) {
+        APIroutes httpMethodInvoked = APIroutes.valueOf(route);
         responseSpec = new ResponseSpecBuilder().expectStatusCode(200)
                 .expectContentType(ContentType.JSON).build();
         postResponse = res.when()
-                .post("/maps/api/place/add/json")
+                .post(httpMethodInvoked.getRoute())
                 .then()
                 .spec(responseSpec)
                 .extract().response();
