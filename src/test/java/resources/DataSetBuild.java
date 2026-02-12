@@ -28,6 +28,7 @@ public class DataSetBuild {
     }
 
     public AddPlace addPlacePayload(String nam, String lan, String add, String web) {
+        // Name , Address , Language and website are fetch from the Example table in the .feature file
         AddPlace ap = new AddPlace();
         ap.setAccuracy(100);
         ap.setAddress(add);

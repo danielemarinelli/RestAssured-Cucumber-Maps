@@ -20,19 +20,20 @@ import static io.restassured.RestAssured.given;
 
 public class stepDefinition extends Utils {
 
-    //global variables accessable for all methods
+    //global variables access for all methods
     RequestSpecification res;
     ResponseSpecification responseSpec;
     Response httpResponse;
     DataSetBuild dataToSend = new DataSetBuild();
 
+    /*
     @Given("add place payload")
     public void add_place_payload() throws IOException {
         res = given().log().all().spec(requestSpecificationNeeded())
                 .body(dataToSend.addPlacePayload());
     }
 
-     /*
+
 
     @Given("add place payload with {string} {string} {string} {string}")
     public void add_place_payload_with(String userName, String userLanguage, String userAddress, String url) throws IOException {
@@ -42,15 +43,15 @@ public class stepDefinition extends Utils {
 
     }
 
+    */
 
 
-
-    @Given("Add Place Payload {string} {string} {string} {string}")
+    @Given("add place payload {string} {string} {string} {string}")
     public void add_place_payload(String userName, String userLanguage, String userAddress, String url) throws IOException {
         res = given().log().all().spec(requestSpecificationNeeded())
                 .body(dataToSend.addPlacePayload(userName, userLanguage, userAddress ,url));
 
-    }*/
+    }
 
     @When("user calls {string} with {string} http request")
     public void user_calls_with_http_request(String route, String method) {
@@ -91,7 +92,5 @@ public class stepDefinition extends Utils {
         System.out.println(System.getProperties());
         assertEquals(jpath.get(keyValue).toString(),expectedValue);
     }
-
-
 
 }

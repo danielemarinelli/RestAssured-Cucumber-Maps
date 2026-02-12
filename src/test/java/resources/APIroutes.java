@@ -15,5 +15,4 @@ public enum APIroutes {
         return route;
     }
 
-
 }
