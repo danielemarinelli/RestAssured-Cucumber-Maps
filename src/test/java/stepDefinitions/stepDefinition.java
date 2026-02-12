@@ -23,7 +23,7 @@ public class stepDefinition extends Utils {
     //global variables accessable for all methods
     RequestSpecification res;
     ResponseSpecification responseSpec;
-    Response postResponse;
+    Response httpResponse;
     DataSetBuild dataToSend = new DataSetBuild();
 
     @Given("add place payload")
@@ -52,21 +52,25 @@ public class stepDefinition extends Utils {
 
     }*/
 
-    @When("user calls {string} with POST http request")
-    public void user_calls_with_post_http_request(String route) {
-        APIroutes httpMethodInvoked = APIroutes.valueOf(route);
+    @When("user calls {string} with {string} http request")
+    public void user_calls_with_http_request(String route, String method) {
+        //constructor will be called with value of route which you pass from .feature file
+        APIroutes httpMethodInvoked = APIroutes.valueOf(route);  //route contains the string from ENAM , that get it from feature file
+        System.out.println(httpMethodInvoked.getRoute());
+
         responseSpec = new ResponseSpecBuilder().expectStatusCode(200)
                 .expectContentType(ContentType.JSON).build();
-        postResponse = res.when()
-                .post(httpMethodInvoked.getRoute())
-                .then()
-                .spec(responseSpec)
-                .extract().response();
+
+        if(method.equalsIgnoreCase("POST"))
+            httpResponse = res.when().post(httpMethodInvoked.getRoute());
+        else if (method.equalsIgnoreCase("GET"))
+            httpResponse = res.when().get(httpMethodInvoked.getRoute());
+
     }
 
     @Then("the API call is success with status code {int}")
     public void the_api_call_is_success_with_status_code(Integer int1) {
-        assertEquals(postResponse.getStatusCode(),200);
+        assertEquals(httpResponse.getStatusCode(),200);
     }
 
      /* POST Response from SWAGGER is below:
@@ -82,15 +86,12 @@ public class stepDefinition extends Utils {
     // verify that Status=OK and scope=APP, so this then runs twice with different set of data
     @Then("{string} in response body in {string}")
     public void in_response_body_in(String keyValue, String expectedValue) {
-        String pr = postResponse.asString();
+        String pr = httpResponse.asString();
         JsonPath jpath = new JsonPath(pr);
         System.out.println(System.getProperties());
         assertEquals(jpath.get(keyValue).toString(),expectedValue);
     }
 
 
-    @Given("I am testing")
-    public void i_am_testing() {
-        System.out.println("Test step works");
-    }
+
 }
