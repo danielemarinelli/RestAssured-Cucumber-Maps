@@ -5,6 +5,8 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 import java.io.*;
@@ -22,8 +24,8 @@ public class Utils {
             PrintStream logToFile = new PrintStream(new FileOutputStream("allLogs.txt"));
             // get the base URL from the Properties file
             reqSpec = new RequestSpecBuilder().setBaseUri(getValueOfProperties("appURL")).addQueryParam("key", "qaclick123")
-                    .addFilter(RequestLoggingFilter.logRequestTo(logToFile))
-                    .addFilter(ResponseLoggingFilter.logResponseTo(logToFile))
+                    .addFilter(RequestLoggingFilter.logRequestTo(logToFile))  // this will save the logs request in a file
+                    .addFilter(ResponseLoggingFilter.logResponseTo(logToFile)) // this will save the logs response in the same file
                     .setContentType(ContentType.JSON).setRelaxedHTTPSValidation().build();
             //RestAssured.useRelaxedHTTPSValidation();  // ---> to bypass SSL verification we can set it on the RequestSpecBuilder
             return reqSpec;
@@ -46,5 +48,13 @@ public class Utils {
         String value = (String) properties.get(key);
         return value;
     }
+
+    // to extract any value from the JSON response passing the key
+    public String getValueFromJsonResponse(Response response, String key){
+        String resp = response.asString();
+        JsonPath js = new JsonPath(resp);
+        return js.get(key).toString();
+    }
+
 
 }

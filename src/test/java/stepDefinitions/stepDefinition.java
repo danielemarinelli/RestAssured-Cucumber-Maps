@@ -87,10 +87,22 @@ public class stepDefinition extends Utils {
     // verify that Status=OK and scope=APP, so this then runs twice with different set of data
     @Then("{string} in response body in {string}")
     public void in_response_body_in(String keyValue, String expectedValue) {
-        String pr = httpResponse.asString();
-        JsonPath jpath = new JsonPath(pr);
-        System.out.println(System.getProperties());
-        assertEquals(jpath.get(keyValue).toString(),expectedValue);
+
+        assertEquals(getValueFromJsonResponse(httpResponse, keyValue),expectedValue);
+        //assertEquals(jpath.get(keyValue).toString(),expectedValue);
+    }
+
+
+    @Then("verify place_Id created maps to {string} using {string}")
+    public void verify_place_id_created_maps_to_using(String expectedName, String resourse) throws IOException {
+        //resourse comes from the feature file in this case AddPlaceAPI
+        String placeIdFromResponse = getValueFromJsonResponse(httpResponse,"place_id");
+        res = given().spec(requestSpecificationNeeded()).queryParam("place_id", placeIdFromResponse);
+        user_calls_with_http_request(resourse,"GET");
+        String actualName = getValueFromJsonResponse(httpResponse,"name");
+        assertEquals(actualName,expectedName);  // expectedName = Kiki from feature file and actualName is extracted from json response
+
+
     }
 
 }
