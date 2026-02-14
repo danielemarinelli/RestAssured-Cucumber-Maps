@@ -47,4 +47,10 @@ public class DataSetBuild {
         ap.setLocation(loc);
         return ap;
     }
+
+    public String deletePlacePayload(String placeID){
+        // use online site --> https://www.freeformatter.com/json-escape.html to convert simple JSON in one line String
+        return "{\r\n      \"place_id\": \""+placeID+"\",\r\n    }";
+    }
+
 }

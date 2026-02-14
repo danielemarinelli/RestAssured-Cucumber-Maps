@@ -5,7 +5,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
@@ -25,6 +24,8 @@ public class stepDefinition extends Utils {
     ResponseSpecification responseSpec;
     Response httpResponse;
     DataSetBuild dataToSend = new DataSetBuild();
+    static String placeIdFromResponse;  // variable is set to static, so when one scenario is over,
+                                        // the value is maintained for the second scenario and all the others(and won't go back to ZERO when the second scenario starts)
 
     /*
     @Given("add place payload")
@@ -85,8 +86,8 @@ public class stepDefinition extends Utils {
             */
 
     // verify that Status=OK and scope=APP, so this then runs twice with different set of data
-    @Then("{string} in response body in {string}")
-    public void in_response_body_in(String keyValue, String expectedValue) {
+    @Then("{string} in response body is {string}")
+    public void in_response_body_is(String keyValue, String expectedValue) {
 
         assertEquals(getValueFromJsonResponse(httpResponse, keyValue),expectedValue);
         //assertEquals(jpath.get(keyValue).toString(),expectedValue);
@@ -96,13 +97,27 @@ public class stepDefinition extends Utils {
     @Then("verify place_Id created maps to {string} using {string}")
     public void verify_place_id_created_maps_to_using(String expectedName, String resourse) throws IOException {
         //resourse comes from the feature file in this case AddPlaceAPI
-        String placeIdFromResponse = getValueFromJsonResponse(httpResponse,"place_id");
+        placeIdFromResponse = getValueFromJsonResponse(httpResponse,"place_id");
         res = given().spec(requestSpecificationNeeded()).queryParam("place_id", placeIdFromResponse);
         user_calls_with_http_request(resourse,"GET");
         String actualName = getValueFromJsonResponse(httpResponse,"name");
         assertEquals(actualName,expectedName);  // expectedName = Kiki from feature file and actualName is extracted from json response
 
+    }
 
+    @Given("DeletePlace Payload")
+    public void delete_place_payload() throws IOException {
+
+        /* body to delete a place from SWAGGER is below:
+        it is only one string , so no sense to use POJO class, let's convert JSON to string and extract 'place_id'
+        use online site --> https://www.freeformatter.com/json-escape.html
+
+            {
+            "place_id": "928b51f64aed18713b0d164d9be8d67f",
+            }
+            */
+        res = given().log().all().spec(requestSpecificationNeeded())
+                .body(dataToSend.deletePlacePayload(placeIdFromResponse));
     }
 
 }
